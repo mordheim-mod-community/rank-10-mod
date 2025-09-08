@@ -1,0 +1,8 @@
+{
+  "Id": "Rank10Mod",
+  "DisplayName": "Rank 10 Warband",
+  "Author": "Clank",
+  "Version": "1.0.0",
+  "AssemblyName": "Rank10Mod.dll",
+  "EntryMethod": "Rank10Mod.Main.Load"
+}
