@@ -5,4 +5,7 @@
 - Execute `UnityModManager.exe`
 - Select game `Mordheim City of the Damned` make sure the `mordheim` folder is correctly set then click `Install`
 - Switch to `Mods` tab
-- Drag the zip file `Rank10Mod_vX.X.X.zip` to install the mod
+- Drag the zip mod zip file to install the mod
+- Launch the game
+
+Enjoy!
