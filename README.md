@@ -1,7 +1,7 @@
 # HOW TO INSTALL
 
 - Download the [latest release](https://github.com/mordheimmodcommunity/rank-10-mod/releases)
-- Download the last version of [Unity Mod Manager](https://www.nexusmods.com/site/mods/21) version >= `v0.32.4a`
+- Download the last version of [Unity Mod Manager](https://www.nexusmods.com/site/mods/21), use version >= `v0.32.4a`
 - Execute `UnityModManager.exe`
 - Select game `Mordheim City of the Damned` make sure the `mordheim` folder is correctly set then click `Install`
 - Switch to `Mods` tab
