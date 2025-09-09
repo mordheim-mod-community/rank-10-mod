@@ -1,5 +1,6 @@
 using HarmonyLib;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
@@ -28,13 +29,13 @@ namespace Rank10Mod
     [HarmonyPatch("NewCampaign")]
     static class SaveManager_NewCampaign_Patch
     {
-        public static bool startedNewCampaing = false;
+        public static bool startedNewCampaign = false;
         static void Prefix(ref int forcedWarRank)
         {
             try
             {
                 forcedWarRank = 10;
-                startedNewCampaing = true;
+                startedNewCampaign = true;
             }
             catch (Exception e)
             {
@@ -109,10 +110,10 @@ namespace Rank10Mod
         {
             try
             {
-                if (SaveManager_NewCampaign_Patch.startedNewCampaing && itemId == ItemId.GOLD)
+                if (SaveManager_NewCampaign_Patch.startedNewCampaign && itemId == ItemId.GOLD)
                 {
                     count = 500000;
-                    SaveManager_NewCampaign_Patch.startedNewCampaing = false;
+                    SaveManager_NewCampaign_Patch.startedNewCampaign = false;
                 }
             }
             catch (Exception e)
@@ -244,7 +245,6 @@ namespace Rank10Mod
             try
             {
                 Traverse.Create(skillData).Property("Time").SetValue(0);
-                
             }
             catch (Exception e)
             {
@@ -264,4 +264,47 @@ namespace Rank10Mod
             }
         }
     }
+
+    // Enable mutation reset
+    [HarmonyPatch(typeof(HideoutInventory))]
+    static class HideoutInventory_Patch
+    {
+        [HarmonyPatch("OnWheelMutationSlotConfirmed")]
+        static void Postfix(ref HideoutInventory __instance, int mutationIdx)
+        {
+            try
+            {
+                var hideoutManager = PandoraSingleton<HideoutManager>.Instance;
+                var mutation = hideoutManager.currentUnit.unit.Mutations[mutationIdx];
+                var hideoutInventory = __instance;
+                var unitController = hideoutManager.currentUnit;
+                var unit = unitController.unit;
+                var mutations = Traverse.Create(unit).Property("Mutations").GetValue<List<Mutation>>();
+                {
+                    hideoutManager.messagePopup.Show(" Mutation Reset", " Do you want to reset this mutation? This will remove your mutation and give you a new one.", new Action<bool>((bool confirm) =>
+                    {
+                        if (confirm)
+                        {
+                            mutations.RemoveAt(mutationIdx);
+                            unit.UnitSave.mutations.Remove(mutation.Data.Id);
+                            unit.UnequipAllItems();
+                            var previousItems = new List<Item>();
+                            unit.AddRandomMutation(previousItems);
+                            unit.ApplyChanges();
+                            hideoutInventory.OnApplyChanges();
+                            unitController.RefreshBodyParts();
+                            hideoutManager.StateMachine.Update();
+                            hideoutManager.SaveChanges();
+                        }
+                    }), false, false);
+                }
+                
+            }
+            catch (Exception e)
+            {
+                Main.mod.Logger.Error(e.ToString());
+            }
+        }
+    }
+
 }
