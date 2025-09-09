@@ -5,7 +5,7 @@
 - Execute `UnityModManager.exe`
 - Select game `Mordheim City of the Damned` make sure the `mordheim` folder is correctly set then click `Install`
 - Switch to `Mods` tab
-- Drag the zip mod zip file to install the mod
+- Drag the mod zip file to install the mod
 - Launch the game
 
 Enjoy!
